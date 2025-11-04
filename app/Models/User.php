@@ -1,44 +1,61 @@
 <?php
+// app/Models/User.php
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+use App\Models\Rol;
 
+/**
+ * MODELO USER - Usuarios del sistema
+ *
+ * Gestiona todos los usuarios que pueden acceder al sistema.
+ * Cada usuario tiene un rol que define sus permisos (Control, Informe o Área específica).
+ * Se relaciona con el modelo Rol para determinar qué puede ver y hacer en el sistema.
+ */
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
+        'name', 'email', 'password', 'rol_id', 'foto_perfil', 'estado'
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
-        'password',
-        'remember_token',
+        'password', 'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+        ];
+    }
+
+    // Relación: Un usuario pertenece a un rol
+    public function rol()
+    {
+        return $this->belongsTo(Rol::class);
+    }
+
+    // Método: Verifica si el usuario es Rol Control (Administrador)
+    public function isControl()
+    {
+        return $this->rol->codigo === 'control';
+    }
+
+    // Método: Verifica si el usuario es Rol Informe (Solo lectura)
+    public function isInforme()
+    {
+        return $this->rol->codigo === 'informe';
+    }
+
+    // Método: Verifica si el usuario es de un área específica
+    public function isArea()
+    {
+        return $this->rol->codigo !== 'control' && $this->rol->codigo !== 'informe';
+    }
 }
