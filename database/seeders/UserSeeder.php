@@ -23,9 +23,9 @@ class UserSeeder extends Seeder
             'estado' => true
         ]);
 
-        // Crear usuario Informe (Jefa)
+        // Crear usuario Informe
         User::create([
-            'name' => 'Jefa Informes',
+            'name' => 'Area Informe',
             'email' => 'informe@sultana.com',
             'password' => Hash::make('password123'),
             'rol_id' => Rol::where('codigo', 'informe')->first()->id,
@@ -35,7 +35,7 @@ class UserSeeder extends Seeder
 
         // Crear usuario de área Operativo
         User::create([
-            'name' => 'Usuario Operativo',
+            'name' => 'Area Operativo',
             'email' => 'operativo@sultana.com',
             'password' => Hash::make('password123'),
             'rol_id' => Rol::where('codigo', 'operativo')->first()->id,
@@ -45,10 +45,60 @@ class UserSeeder extends Seeder
 
         // Crear usuario de área Humanidad
         User::create([
-            'name' => 'Usuario Humanidad',
+            'name' => 'Area Humanidad',
             'email' => 'humanidad@sultana.com',
             'password' => Hash::make('password123'),
             'rol_id' => Rol::where('codigo', 'humanidad')->first()->id,
+            'foto_perfil' => null,
+            'estado' => true
+        ]);
+
+        // Crear usuario de área Siniestros
+        User::create([
+            'name' => 'Area Siniestros',
+            'email' => 'siniestros@sultana.com',
+            'password' => Hash::make('password123'),
+            'rol_id' => Rol::where('codigo', 'siniestros')->first()->id,
+            'foto_perfil' => null,
+            'estado' => true
+        ]);
+
+        // Crear usuario de área Analistas
+        User::create([
+            'name' => 'Area Analistas',
+            'email' => 'analistas@sultana.com',
+            'password' => Hash::make('password123'),
+            'rol_id' => Rol::where('codigo', 'analistas')->first()->id,
+            'foto_perfil' => null,
+            'estado' => true
+        ]);
+
+        // Crear usuario de área Mantenimiento
+        User::create([
+            'name' => 'Area Mantenimiento',
+            'email' => 'mantenimiento@sultana.com',
+            'password' => Hash::make('password123'),
+            'rol_id' => Rol::where('codigo', 'mantenimiento')->first()->id,
+            'foto_perfil' => null,
+            'estado' => true
+        ]);
+
+        // Crear usuario de área Documentación
+        User::create([
+            'name' => 'Area Documentación',
+            'email' => 'documentacion@sultana.com',
+            'password' => Hash::make('password123'),
+            'rol_id' => Rol::where('codigo', 'documentacion')->first()->id,
+            'foto_perfil' => null,
+            'estado' => true
+        ]);
+
+        // Crear usuario de área Liquidación
+        User::create([
+            'name' => 'Area Liquidación',
+            'email' => 'liquidacion@sultana.com',
+            'password' => Hash::make('password123'),
+            'rol_id' => Rol::where('codigo', 'liquidacion')->first()->id,
             'foto_perfil' => null,
             'estado' => true
         ]);
