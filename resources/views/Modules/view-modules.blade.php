@@ -9,12 +9,12 @@
     <style>
         /* PALETA CORPORATIVA SULTANA DEL VALLE */
         :root {
-            --sultana-azul: #0A35FF;      /* Azul principal */
-            --sultana-azul-oscuro: #0830E0; /* Azul oscuro */
-            --sultana-naranja: #FF7A00;   /* Naranja corporativo */
-            --sultana-naranja-claro: #FF9B2F; /* Naranja claro */
-            --sultana-gris: #F4F6F8;      /* Gris corporativo */
-            --sultana-texto: #0F172A;     /* Texto oscuro */
+            --sultana-azul: #0A35FF;
+            --sultana-azul-oscuro: #0830E0;
+            --sultana-naranja: #FF7A00;
+            --sultana-naranja-claro: #FF9B2F;
+            --sultana-gris: #F4F6F8;
+            --sultana-texto: #0F172A;
         }
 
         .bg-sultana-azul {
@@ -76,7 +76,7 @@
         .profile-pic {
             width: 50px;
             height: 50px;
-            border-radius: 12px;
+            border-radius: 8px;
             background: linear-gradient(135deg, var(--sultana-azul) 0%, var(--sultana-naranja) 100%);
             display: flex;
             align-items: center;
@@ -417,7 +417,7 @@
                 moduleCard.innerHTML = `
                     <div class="text-center h-full flex flex-col justify-between">
                         <div>
-                            <div class="${colors.bg_opacity} rounded-full p-3 inline-block mb-3 border border-opacity-20 ${colors.bg.replace('bg-', 'border-')}">
+                            <div class="p-3 inline-block mb-3">
                                 <i class="fas ${module.icon} ${colors.text} text-xl"></i>
                             </div>
                             <h3 class="text-base font-semibold mb-1 text-sultana-texto">${module.title}</h3>
@@ -439,7 +439,7 @@
                 alert('❌ No tienes permisos para acceder al módulo: ' + moduleTitle);
                 return;
             }
-            alert(`✅ Accediendo al módulo: ${moduleTitle}`);
+            window.location.href = `/tablero/${moduleId}`;
         }
 
         // Inicializar
@@ -448,19 +448,6 @@
             renderModules();
             setInterval(updateDateTime, 1000);
         });
-
-        function accessModule(moduleId, hasAccess, moduleTitle) {
-    console.log('🔗 Intentando acceder a:', moduleId);
-    console.log('✅ Tiene acceso:', hasAccess);
-
-    if (!hasAccess) {
-        alert('❌ No tienes permisos para acceder al módulo: ' + moduleTitle);
-        return;
-    }
-
-    console.log('🚀 Redirigiendo a:', `/tablero/${moduleId}`);
-    window.location.href = `/tablero/${moduleId}`;
-}
     </script>
 
 </body>

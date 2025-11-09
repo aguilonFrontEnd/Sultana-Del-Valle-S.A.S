@@ -1,5 +1,4 @@
 <?php
-// app/Http/Controllers/SesionController.php
 
 namespace App\Http\Controllers;
 
@@ -104,7 +103,7 @@ class SesionController extends Controller
     }
 
     /**
-     * REDIRIGIR A LA VISTA DE MÓDULOS (Modules/view-modules.blade.php)
+     * REDIRIGIR A LA VISTA DE MÓDULOS
      */
     public function redirectToModules()
     {
@@ -128,6 +127,74 @@ class SesionController extends Controller
             'userRol' => $userWithRol->rol->codigo,
             'userArea' => $userWithRol->rol->nombre
         ]);
+    }
+
+    /**
+     * MOSTRAR TABLERO POWER BI
+     */
+    public function showTablero($modulo)
+    {
+        // Verificar autenticación
+        if (!Auth::check()) {
+            return redirect()->route('login.form')->with('toast', [
+                'type' => 'error',
+                'message' => 'Debes iniciar sesión primero.'
+            ]);
+        }
+
+        $user = Auth::user();
+        $userWithRol = User::with('rol')->find($user->id);
+
+        // Verificar permisos del usuario para este módulo
+        if (!$this->hasModuleAccess($userWithRol->rol->codigo, $modulo)) {
+            return redirect()->route('modules')->with('toast', [
+                'type' => 'error',
+                'message' => 'No tienes permisos para acceder a este módulo.'
+            ]);
+        }
+
+        $moduloNombres = [
+            'operativo' => 'Operativo',
+            'humanidad' => 'Humanidad',
+            'siniestros' => 'Siniestros',
+            'analistas' => 'Analistas',
+            'mantenimiento' => 'Mantenimiento',
+            'documentacion' => 'Documentación',
+            'liquidacion' => 'Liquidación',
+            'configuracion' => 'Configuración'
+        ];
+
+        // URLs de Power BI para cada módulo
+        $powerbiUrls = [
+            'operativo' => 'https://app.powerbi.com/reportEmbed?reportId=0dbc5914-c8b1-448a-9082-25671c7f7b88&autoAuth=true&ctid=bfcae52b-3054-486c-998b-518ff055dcaa',
+            'humanidad' => '#',
+            'siniestros' => '#',
+            'analistas' => '#',
+            'mantenimiento' => '#',
+            'documentacion' => '#',
+            'liquidacion' => '#',
+            'configuracion' => '#'
+        ];
+
+        return view('Table.view-tables', [
+            'user' => $userWithRol,
+            'userName' => $userWithRol->name,
+            'userArea' => $userWithRol->rol->nombre,
+            'userRol' => $userWithRol->rol->codigo,
+            'moduloNombre' => $moduloNombres[$modulo] ?? 'General',
+            'moduloId' => $modulo,
+            'powerbiUrl' => $powerbiUrls[$modulo] ?? '#'
+        ]);
+    }
+
+    /**
+     * Verificar acceso al módulo
+     */
+    private function hasModuleAccess($userRolCodigo, $moduleCodigo)
+    {
+        if ($userRolCodigo === 'control') return true;
+        if ($userRolCodigo === 'informe') return $moduleCodigo !== 'configuracion';
+        return $userRolCodigo === $moduleCodigo;
     }
 
     /**
