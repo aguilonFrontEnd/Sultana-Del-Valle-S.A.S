@@ -140,17 +140,7 @@
 
     {{-- CONTENEDOR POWER BI --}}
     <div class="powerbi-container">
-        @if($moduloId === 'configuracion')
-            {{-- Módulo de configuración no tiene Power BI --}}
-            <div class="demo-placeholder">
-                <div class="text-center">
-                    <i class="fas fa-cogs text-6xl mb-4"></i>
-                    <h2 class="text-3xl mb-2">MÓDULO DE CONFIGURACIÓN</h2>
-                    <p class="text-xl opacity-90">Panel de administración del sistema</p>
-                    <p class="text-sm opacity-70 mt-4">Este módulo no contiene tableros Power BI</p>
-                </div>
-            </div>
-        @elseif($powerbiUrl && $powerbiUrl !== '#')
+        @if($powerbiUrl && $powerbiUrl !== '#')
             {{-- Iframe real de Power BI --}}
             <iframe id="powerbi-iframe"
                     src="{{ $powerbiUrl }}"

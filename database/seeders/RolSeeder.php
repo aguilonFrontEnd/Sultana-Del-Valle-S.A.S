@@ -12,15 +12,18 @@ class RolSeeder extends Seeder
     public function run(): void
     {
         $roles = [
-            ['nombre' => 'Control', 'codigo' => 'control', 'descripcion' => 'Administrador del sistema - Acceso total'],
-            ['nombre' => 'Informe', 'codigo' => 'informe', 'descripcion' => 'Rol de solo lectura - Ve todos los módulos'],
-            ['nombre' => 'Operativo', 'codigo' => 'operativo', 'descripcion' => 'Área operativa de transportes'],
-            ['nombre' => 'Humanidad', 'codigo' => 'humanidad', 'descripcion' => 'Área de gestión humana'],
-            ['nombre' => 'Siniestros', 'codigo' => 'siniestros', 'descripcion' => 'Área de gestión de siniestros'],
-            ['nombre' => 'Analistas', 'codigo' => 'analistas', 'descripcion' => 'Área de análisis de datos'],
-            ['nombre' => 'Mantenimiento', 'codigo' => 'mantenimiento', 'descripcion' => 'Área de mantenimiento vehicular'],
-            ['nombre' => 'Documentación', 'codigo' => 'documentacion', 'descripcion' => 'Área de documentación y archivo'],
-            ['nombre' => 'Liquidación', 'codigo' => 'liquidacion', 'descripcion' => 'Área de liquidación de pagos'],
+            ['nombre' => 'Control', 'codigo' => 'control'],
+            ['nombre' => 'Informe', 'codigo' => 'informe'],
+            ['nombre' => 'Operativo', 'codigo' => 'operativo'],
+            ['nombre' => 'Humanidad', 'codigo' => 'humanidad'],
+            ['nombre' => 'Siniestros', 'codigo' => 'siniestros'],
+            ['nombre' => 'Analistas', 'codigo' => 'analistas'],
+            ['nombre' => 'Mantenimiento', 'codigo' => 'mantenimiento'],
+            ['nombre' => 'Documentación', 'codigo' => 'documentacion'],
+            ['nombre' => 'Liquidación', 'codigo' => 'liquidacion'],
+            // NUEVOS ROLES
+            ['nombre' => 'Contadora', 'codigo' => 'contadora'],
+            ['nombre' => 'Cartera', 'codigo' => 'cartera'],
         ];
 
         foreach ($roles as $rol) {

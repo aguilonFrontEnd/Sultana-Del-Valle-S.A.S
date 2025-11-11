@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\User;
 use App\Models\Rol;
 
-class SesionController extends Controller
+class LogicSesionController extends Controller
 {
     /**
      * MOSTRAR FORMULARIO DE LOGIN
@@ -132,76 +132,120 @@ class SesionController extends Controller
     /**
      * MOSTRAR TABLERO POWER BI
      */
-    public function showTablero($modulo)
-    {
-        // Verificar autenticación
-        if (!Auth::check()) {
-            return redirect()->route('login.form')->with('toast', [
-                'type' => 'error',
-                'message' => 'Debes iniciar sesión primero.'
-            ]);
-        }
+   public function showTablero($modulo) {
+    if (!Auth::check()) {
+        return redirect()->route('login.form')->with('toast', [
+            'type' => 'error',
+            'message' => 'Debes iniciar sesión primero.'
+        ]);
+    }
 
-        $user = Auth::user();
-        $userWithRol = User::with('rol')->find($user->id);
+    $user = Auth::user();
+    $userWithRol = User::with('rol')->find($user->id);
 
-        // Verificar permisos del usuario para este módulo
-        if (!$this->hasModuleAccess($userWithRol->rol->codigo, $modulo)) {
-            return redirect()->route('modules')->with('toast', [
-                'type' => 'error',
-                'message' => 'No tienes permisos para acceder a este módulo.'
-            ]);
-        }
+    if (!$this->hasModuleAccess($userWithRol->rol->codigo, $modulo)) {
+        return redirect()->route('modules')->with('toast', [
+            'type' => 'error',
+            'message' => 'No tienes permisos para acceder a este módulo.'
+        ]);
+    }
 
-        $moduloNombres = [
-            'operativo' => 'Operativo',
-            'humanidad' => 'Humanidad',
-            'siniestros' => 'Siniestros',
-            'analistas' => 'Analistas',
-            'mantenimiento' => 'Mantenimiento',
-            'documentacion' => 'Documentación',
-            'liquidacion' => 'Liquidación',
-            'configuracion' => 'Configuración'
-        ];
+    $moduloNombres = [
+        'operativo' => 'Operativo',
+        'humanidad' => 'Humanidad', 
+        'siniestros' => 'Siniestros',
+        'analistas' => 'Analistas',
+        'mantenimiento' => 'Mantenimiento',
+        'documentacion' => 'Documentación',
+        'liquidacion' => 'Liquidación',
+        'cartera' => 'Cartera'
+    ];
 
-        // URLs de Power BI para cada módulo
-        $powerbiUrls = [
-            'operativo' => 'https://app.powerbi.com/reportEmbed?reportId=0dbc5914-c8b1-448a-9082-25671c7f7b88&autoAuth=true&ctid=bfcae52b-3054-486c-998b-518ff055dcaa',
-            'humanidad' => '#',
-            'siniestros' => '#',
-            'analistas' => '#',
-            'mantenimiento' => '#',
-            'documentacion' => '#',
-            'liquidacion' => '#',
-            'configuracion' => '#'
-        ];
+    $powerbiUrls = [
+        'operativo' => 'https://app.powerbi.com/reportEmbed?reportId=ba1e35a6-4633-48da-820f-299668ba8daa&autoAuth=true&ctid=bfcae52b-3054-486c-998b-518ff055dcaa',
+        'documentacion' => 'https://app.powerbi.com/reportEmbed?reportId=557738c9-9afe-4a93-a934-146ae6c77a7c&autoAuth=true&ctid=bfcae52b-3054-486c-998b-518ff055dcaa',
+        'siniestros' => 'https://app.powerbi.com/reportEmbed?reportId=16fae2c4-6705-4e48-9f96-5cf2b5c23bca&autoAuth=true&ctid=bfcae52b-3054-486c-998b-518ff055dcaa',
+        'mantenimiento' => 'https://app.powerbi.com/reportEmbed?reportId=22f792ef-8b75-4bc6-8b93-96a20145c2e4&autoAuth=true&ctid=bfcae52b-3054-486c-998b-518ff055dcaa',
+        'analistas' => 'https://app.powerbi.com/reportEmbed?reportId=0dbc5914-c8b1-448a-9082-25671c7f7b88&autoAuth=true&ctid=bfcae52b-3054-486c-998b-518ff055dcaa',
+        'humanidad' => '#',
+        'liquidacion' => '#', 
+        'cartera' => '#'
+    ];
 
-        return view('Table.view-tables', [
-            'user' => $userWithRol,
-            'userName' => $userWithRol->name,
-            'userArea' => $userWithRol->rol->nombre,
-            'userRol' => $userWithRol->rol->codigo,
-            'moduloNombre' => $moduloNombres[$modulo] ?? 'General',
-            'moduloId' => $modulo,
-            'powerbiUrl' => $powerbiUrls[$modulo] ?? '#'
+    // VERIFICA QUE ESTA LÍNEA ESTÉ EXACTA:
+    return view('Table.view-tables', [
+        'user' => $userWithRol,
+        'userName' => $userWithRol->name,
+        'userArea' => $userWithRol->rol->nombre,
+        'userRol' => $userWithRol->rol->codigo,
+        'moduloNombre' => $moduloNombres[$modulo] ?? 'General',
+        'moduloId' => $modulo,
+        'powerbiUrl' => $powerbiUrls[$modulo] ?? '#'
         ]);
     }
 
     /**
-     * Verificar acceso al módulo
+     * Verificar acceso al módulo - NUEVA LÓGICA
      */
-    private function hasModuleAccess($userRolCodigo, $moduleCodigo)
-    {
-        if ($userRolCodigo === 'control') return true;
-        if ($userRolCodigo === 'informe') return $moduleCodigo !== 'configuracion';
+    private function hasModuleAccess($userRolCodigo, $moduleCodigo) {
+        // Control e Informe pueden ver todos los módulos
+        if ($userRolCodigo === 'control' || $userRolCodigo === 'informe') {
+            return true;
+        }
+        
+        // Operativo puede ver analistas y operativo
+        if ($userRolCodigo === 'operativo') {
+            return $moduleCodigo === 'analistas' || $moduleCodigo === 'operativo';
+        }
+        
+        // Contadora puede ver cartera y liquidacion
+        if ($userRolCodigo === 'contadora') {
+            return $moduleCodigo === 'cartera' || $moduleCodigo === 'liquidacion';
+        }
+        
+        // Cartera solo puede ver cartera
+        if ($userRolCodigo === 'cartera') {
+            return $moduleCodigo === 'cartera';
+        }
+        
+        // Liquidacion solo puede ver liquidacion
+        if ($userRolCodigo === 'liquidacion') {
+            return $moduleCodigo === 'liquidacion';
+        }
+        
+        // Humanidad solo puede ver humanidad
+        if ($userRolCodigo === 'humanidad') {
+            return $moduleCodigo === 'humanidad';
+        }
+        
+        // Siniestros solo puede ver siniestros
+        if ($userRolCodigo === 'siniestros') {
+            return $moduleCodigo === 'siniestros';
+        }
+        
+        // Documentacion solo puede ver documentacion
+        if ($userRolCodigo === 'documentacion') {
+            return $moduleCodigo === 'documentacion';
+        }
+        
+        // Mantenimiento solo puede ver mantenimiento
+        if ($userRolCodigo === 'mantenimiento') {
+            return $moduleCodigo === 'mantenimiento';
+        }
+        
+        // Analistas solo puede ver analistas
+        if ($userRolCodigo === 'analistas') {
+            return $moduleCodigo === 'analistas';
+        }
+        
+        // Por defecto, solo puede ver su propio módulo
         return $userRolCodigo === $moduleCodigo;
     }
 
     /**
      * ACTUALIZAR FOTO DE PERFIL
      */
-    public function updatePhoto(Request $request)
-    {
+    public function updatePhoto(Request $request) {
         try {
             $request->validate([
                 'foto_perfil' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
@@ -236,8 +280,7 @@ class SesionController extends Controller
     /**
      * CERRAR SESIÓN
      */
-    public function logout(Request $request)
-    {
+    public function logout(Request $request) {
         try {
             Auth::logout();
             $request->session()->invalidate();

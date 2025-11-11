@@ -102,5 +102,25 @@ class UserSeeder extends Seeder
             'foto_perfil' => null,
             'estado' => true
         ]);
+
+        // NUEVO: Crear usuario Contadora
+        User::create([
+            'name' => 'Contadora',
+            'email' => 'contadora@sultana.com',
+            'password' => Hash::make('password123'),
+            'rol_id' => Rol::where('codigo', 'contadora')->first()->id,
+            'foto_perfil' => null,
+            'estado' => true
+        ]);
+
+        // NUEVO: Crear usuario Cartera
+        User::create([
+            'name' => 'Area Cartera',
+            'email' => 'cartera@sultana.com',
+            'password' => Hash::make('password123'),
+            'rol_id' => Rol::where('codigo', 'cartera')->first()->id,
+            'foto_perfil' => null,
+            'estado' => true
+        ]);
     }
 }

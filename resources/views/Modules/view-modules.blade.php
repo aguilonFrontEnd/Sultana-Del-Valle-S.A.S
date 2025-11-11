@@ -186,7 +186,7 @@
 
     {{-- SCRIPT PARA HORA EN TIEMPO REAL, LÓGICA DE PERMISOS Y FOTO DE PERFIL --}}
     <script>
-        // Datos de los módulos
+        // Datos de los módulos ACTUALIZADOS - CON CARTERA
         const modules = [
             {
                 id: 'operativo',
@@ -245,13 +245,12 @@
                 color: 'indigo'
             },
             {
-                id: 'configuracion',
-                title: 'Configuración',
-                description: 'Configuración del sistema',
-                icon: 'fa-cogs',
-                codigo: 'configuracion',
-                config: true,
-                color: 'gray'
+                id: 'cartera',
+                title: 'Cartera',
+                description: 'Gestión de tasas de uso',
+                icon: 'fa-money-bill-wave',
+                codigo: 'cartera',
+                color: 'emerald'
             }
         ];
 
@@ -335,11 +334,61 @@
             });
         }
 
-        // ========== FUNCIONES EXISTENTES ==========
+        // ========== NUEVA LÓGICA DE PERMISOS ACTUALIZADA ==========
         function isModuleActive(moduleCodigo) {
             const userRolCodigo = userData.rol.codigo;
-            if (userRolCodigo === 'control') return true;
-            if (userRolCodigo === 'informe') return moduleCodigo !== 'configuracion';
+            
+            // Control e Informe pueden ver todos los módulos
+            if (userRolCodigo === 'control' || userRolCodigo === 'informe') {
+                return true;
+            }
+            
+            // Operativo puede ver analistas y operativo
+            if (userRolCodigo === 'operativo') {
+                return moduleCodigo === 'analistas' || moduleCodigo === 'operativo';
+            }
+            
+            // Contadora puede ver cartera y liquidacion
+            if (userRolCodigo === 'contadora') {
+                return moduleCodigo === 'cartera' || moduleCodigo === 'liquidacion';
+            }
+            
+            // Cartera solo puede ver cartera
+            if (userRolCodigo === 'cartera') {
+                return moduleCodigo === 'cartera';
+            }
+            
+            // Liquidacion solo puede ver liquidacion
+            if (userRolCodigo === 'liquidacion') {
+                return moduleCodigo === 'liquidacion';
+            }
+            
+            // Humanidad solo puede ver humanidad
+            if (userRolCodigo === 'humanidad') {
+                return moduleCodigo === 'humanidad';
+            }
+            
+            // Siniestros solo puede ver siniestros
+            if (userRolCodigo === 'siniestros') {
+                return moduleCodigo === 'siniestros';
+            }
+            
+            // Documentacion solo puede ver documentacion
+            if (userRolCodigo === 'documentacion') {
+                return moduleCodigo === 'documentacion';
+            }
+            
+            // Mantenimiento solo puede ver mantenimiento
+            if (userRolCodigo === 'mantenimiento') {
+                return moduleCodigo === 'mantenimiento';
+            }
+            
+            // Analistas solo puede ver analistas
+            if (userRolCodigo === 'analistas') {
+                return moduleCodigo === 'analistas';
+            }
+            
+            // Por defecto, solo puede ver su propio módulo
             return userRolCodigo === moduleCodigo;
         }
 
@@ -368,7 +417,7 @@
                 const moduleCard = document.createElement('div');
                 moduleCard.className = `module-card rounded-xl p-5 shadow-lg ${isActive ? 'module-active icon-bounce' : 'module-blocked'}`;
 
-                // Colores corporativos mejorados
+                // Colores corporativos mejorados - AGREGADO COLOR PARA CARTERA
                 const colorClasses = {
                     'operativo': {
                         bg: 'bg-[#0A35FF]',
@@ -405,14 +454,14 @@
                         text: 'text-[#4F46E5]',
                         bg_opacity: 'bg-[#4F46E5] bg-opacity-10'
                     },
-                    'configuracion': {
-                        bg: 'bg-[#6B7280]',
-                        text: 'text-[#6B7280]',
-                        bg_opacity: 'bg-[#6B7280] bg-opacity-10'
+                    'cartera': {
+                        bg: 'bg-[#10B981]',
+                        text: 'text-[#10B981]',
+                        bg_opacity: 'bg-[#10B981] bg-opacity-10'
                     }
                 };
 
-                const colors = colorClasses[module.codigo] || colorClasses.configuracion;
+                const colors = colorClasses[module.codigo] || colorClasses.operativo;
 
                 moduleCard.innerHTML = `
                     <div class="text-center h-full flex flex-col justify-between">
@@ -425,7 +474,7 @@
                         </div>
                         <button class="${colors.bg} text-white px-3 py-2 rounded-lg font-medium hover:opacity-90 transition-all w-full text-sm ${!isActive ? 'opacity-70 cursor-not-allowed' : ''}"
                                 onclick="accessModule('${module.id}', ${isActive}, '${module.title}')">
-                            ${isActive ? (module.config ? 'CONFIGURAR' : 'VISUALIZAR') : 'BLOQUEADO'}
+                            ${isActive ? 'VISUALIZAR' : 'BLOQUEADO'}
                         </button>
                     </div>
                 `;
