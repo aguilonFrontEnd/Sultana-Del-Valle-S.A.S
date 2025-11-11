@@ -337,57 +337,57 @@
         // ========== NUEVA LÓGICA DE PERMISOS ACTUALIZADA ==========
         function isModuleActive(moduleCodigo) {
             const userRolCodigo = userData.rol.codigo;
-            
+
             // Control e Informe pueden ver todos los módulos
             if (userRolCodigo === 'control' || userRolCodigo === 'informe') {
                 return true;
             }
-            
+
             // Operativo puede ver analistas y operativo
             if (userRolCodigo === 'operativo') {
                 return moduleCodigo === 'analistas' || moduleCodigo === 'operativo';
             }
-            
+
             // Contadora puede ver cartera y liquidacion
             if (userRolCodigo === 'contadora') {
                 return moduleCodigo === 'cartera' || moduleCodigo === 'liquidacion';
             }
-            
+
             // Cartera solo puede ver cartera
             if (userRolCodigo === 'cartera') {
                 return moduleCodigo === 'cartera';
             }
-            
+
             // Liquidacion solo puede ver liquidacion
             if (userRolCodigo === 'liquidacion') {
                 return moduleCodigo === 'liquidacion';
             }
-            
+
             // Humanidad solo puede ver humanidad
             if (userRolCodigo === 'humanidad') {
                 return moduleCodigo === 'humanidad';
             }
-            
+
             // Siniestros solo puede ver siniestros
             if (userRolCodigo === 'siniestros') {
                 return moduleCodigo === 'siniestros';
             }
-            
+
             // Documentacion solo puede ver documentacion
             if (userRolCodigo === 'documentacion') {
                 return moduleCodigo === 'documentacion';
             }
-            
+
             // Mantenimiento solo puede ver mantenimiento
             if (userRolCodigo === 'mantenimiento') {
                 return moduleCodigo === 'mantenimiento';
             }
-            
+
             // Analistas solo puede ver analistas
             if (userRolCodigo === 'analistas') {
                 return moduleCodigo === 'analistas';
             }
-            
+
             // Por defecto, solo puede ver su propio módulo
             return userRolCodigo === moduleCodigo;
         }

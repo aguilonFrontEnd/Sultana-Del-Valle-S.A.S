@@ -152,7 +152,7 @@ class LogicSesionController extends Controller
 
     $moduloNombres = [
         'operativo' => 'Operativo',
-        'humanidad' => 'Humanidad', 
+        'humanidad' => 'Humanidad',
         'siniestros' => 'Siniestros',
         'analistas' => 'Analistas',
         'mantenimiento' => 'Mantenimiento',
@@ -167,8 +167,8 @@ class LogicSesionController extends Controller
         'siniestros' => 'https://app.powerbi.com/reportEmbed?reportId=16fae2c4-6705-4e48-9f96-5cf2b5c23bca&autoAuth=true&ctid=bfcae52b-3054-486c-998b-518ff055dcaa',
         'mantenimiento' => 'https://app.powerbi.com/reportEmbed?reportId=22f792ef-8b75-4bc6-8b93-96a20145c2e4&autoAuth=true&ctid=bfcae52b-3054-486c-998b-518ff055dcaa',
         'analistas' => 'https://app.powerbi.com/reportEmbed?reportId=0dbc5914-c8b1-448a-9082-25671c7f7b88&autoAuth=true&ctid=bfcae52b-3054-486c-998b-518ff055dcaa',
-        'humanidad' => '#',
-        'liquidacion' => '#', 
+        'humanidad' => 'https://app.powerbi.com/reportEmbed?reportId=5370504f-1ab5-4370-a7b2-c6e36c695b3b&autoAuth=true&ctid=bfcae52b-3054-486c-998b-518ff055dcaa',
+        'liquidacion' => '#',
         'cartera' => '#'
     ];
 
@@ -192,52 +192,52 @@ class LogicSesionController extends Controller
         if ($userRolCodigo === 'control' || $userRolCodigo === 'informe') {
             return true;
         }
-        
+
         // Operativo puede ver analistas y operativo
         if ($userRolCodigo === 'operativo') {
             return $moduleCodigo === 'analistas' || $moduleCodigo === 'operativo';
         }
-        
+
         // Contadora puede ver cartera y liquidacion
         if ($userRolCodigo === 'contadora') {
             return $moduleCodigo === 'cartera' || $moduleCodigo === 'liquidacion';
         }
-        
+
         // Cartera solo puede ver cartera
         if ($userRolCodigo === 'cartera') {
             return $moduleCodigo === 'cartera';
         }
-        
+
         // Liquidacion solo puede ver liquidacion
         if ($userRolCodigo === 'liquidacion') {
             return $moduleCodigo === 'liquidacion';
         }
-        
+
         // Humanidad solo puede ver humanidad
         if ($userRolCodigo === 'humanidad') {
             return $moduleCodigo === 'humanidad';
         }
-        
+
         // Siniestros solo puede ver siniestros
         if ($userRolCodigo === 'siniestros') {
             return $moduleCodigo === 'siniestros';
         }
-        
+
         // Documentacion solo puede ver documentacion
         if ($userRolCodigo === 'documentacion') {
             return $moduleCodigo === 'documentacion';
         }
-        
+
         // Mantenimiento solo puede ver mantenimiento
         if ($userRolCodigo === 'mantenimiento') {
             return $moduleCodigo === 'mantenimiento';
         }
-        
+
         // Analistas solo puede ver analistas
         if ($userRolCodigo === 'analistas') {
             return $moduleCodigo === 'analistas';
         }
-        
+
         // Por defecto, solo puede ver su propio módulo
         return $userRolCodigo === $moduleCodigo;
     }
