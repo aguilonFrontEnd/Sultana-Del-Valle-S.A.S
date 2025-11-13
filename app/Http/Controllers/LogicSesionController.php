@@ -162,11 +162,11 @@ class LogicSesionController extends Controller
     ];
 
     $powerbiUrls = [
-        'operativo' => 'https://app.powerbi.com/reportEmbed?reportId=ba1e35a6-4633-48da-820f-299668ba8daa&autoAuth=true&ctid=bfcae52b-3054-486c-998b-518ff055dcaa',
+        'operativo' => 'https://app.fabric.microsoft.com/reportEmbed?reportId=28c3b66a-1714-4938-9247-2baa8f87ea5b&autoAuth=true&ctid=bfcae52b-3054-486c-998b-518ff055dcaa',
         'documentacion' => 'https://app.powerbi.com/reportEmbed?reportId=557738c9-9afe-4a93-a934-146ae6c77a7c&autoAuth=true&ctid=bfcae52b-3054-486c-998b-518ff055dcaa',
         'siniestros' => 'https://app.powerbi.com/reportEmbed?reportId=16fae2c4-6705-4e48-9f96-5cf2b5c23bca&autoAuth=true&ctid=bfcae52b-3054-486c-998b-518ff055dcaa',
         'mantenimiento' => 'https://app.powerbi.com/reportEmbed?reportId=22f792ef-8b75-4bc6-8b93-96a20145c2e4&autoAuth=true&ctid=bfcae52b-3054-486c-998b-518ff055dcaa',
-        'analistas' => 'https://app.powerbi.com/reportEmbed?reportId=0dbc5914-c8b1-448a-9082-25671c7f7b88&autoAuth=true&ctid=bfcae52b-3054-486c-998b-518ff055dcaa',
+        'analistas' => 'https://app.powerbi.com/reportEmbed?reportId=bc3e7363-4d20-42d5-8fdb-9813be575122&autoAuth=true&ctid=bfcae52b-3054-486c-998b-518ff055dcaa',
         'humanidad' => 'https://app.powerbi.com/reportEmbed?reportId=5370504f-1ab5-4370-a7b2-c6e36c695b3b&autoAuth=true&ctid=bfcae52b-3054-486c-998b-518ff055dcaa',
         'liquidacion' => '#',
         'cartera' => '#'
