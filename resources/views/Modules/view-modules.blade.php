@@ -6,6 +6,7 @@
     <title>Sistema de Tableros Estadísticos - Sultana del Valle</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
         /* PALETA CORPORATIVA SULTANA DEL VALLE */
         :root {
@@ -31,33 +32,40 @@
             height: 200px;
             background: white;
         }
+
         .module-card:hover {
             transform: translateY(-3px);
             box-shadow: 0 10px 25px -5px rgba(10, 53, 255, 0.1), 0 4px 10px -2px rgba(10, 53, 255, 0.05);
             border-color: var(--sultana-azul);
         }
+
         .module-active {
             opacity: 1;
             border: 2px solid #e2e8f0;
         }
+
         .module-blocked {
             opacity: 0.6;
             filter: grayscale(40%);
             border: 2px solid #e2e8f0;
         }
+
         .icon-bounce {
             animation: microBounce 3s infinite;
         }
+
         @keyframes microBounce {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-2px); }
         }
+
         .header {
             padding: 15px 20px;
             background: linear-gradient(135deg, var(--sultana-azul) 0%, var(--sultana-azul-oscuro) 100%);
             border-bottom: 3px solid var(--sultana-naranja);
             color: white;
         }
+
         .info-bar {
             display: flex;
             justify-content: space-between;
@@ -68,81 +76,27 @@
             border-bottom: 1px solid #e2e8f0;
             color: var(--sultana-texto);
         }
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .profile-pic {
-            width: 50px;
-            height: 50px;
-            border-radius: 8px;
-            background: linear-gradient(135deg, var(--sultana-azul) 0%, var(--sultana-naranja) 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            color: white;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            border: 2px solid white;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-        .profile-pic img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 10px;
-        }
-        .profile-pic input {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            cursor: pointer;
-        }
-        .profile-pic:hover::after {
-            content: '📷';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            border-radius: 10px;
-        }
+
         body {
             background-color: white;
             color: var(--sultana-texto);
         }
+
         .header-content {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
+
         .title-section {
             flex: 1;
         }
+
         .header-user {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 8px;
         }
-
-        /* Colores corporativos para módulos */
-        .text-sultana-azul { color: var(--sultana-azul); }
-        .text-sultana-naranja { color: var(--sultana-naranja); }
-        .text-sultana-texto { color: var(--sultana-texto); }
-
-        .border-sultana-azul { border-color: var(--sultana-azul); }
-        .border-sultana-naranja { border-color: var(--sultana-naranja); }
     </style>
 </head>
 <body class="min-h-screen">
@@ -154,16 +108,36 @@
                 <h1 class="text-2xl font-bold">SISTEMA DE TABLEROS ESTADÍSTICOS</h1>
                 <h2 class="text-lg opacity-90">Transportes Sultana del Valle S.A.S</h2>
             </div>
+
             <div class="header-user">
-                <!-- Foto de perfil corporativa -->
-                <div class="profile-pic" id="profilePicContainer">
-                    @if($user->foto_perfil)
-                        <img src="{{ asset('storage/' . $user->foto_perfil) }}" alt="Foto de perfil" id="profileImage">
-                    @else
-                        <i class="fas fa-user" id="profileIcon"></i>
-                    @endif
-                    <input type="file" id="profilePhotoInput" accept="image/*" style="display: none;">
-                </div>
+                @php
+                    // Módulo por defecto para el ícono de ayuda (según rol)
+                    // Para roles que solo ven un módulo usamos ese; si no, por defecto "operativo"
+                    $moduloAyuda = $userRol ?: 'operativo';
+                @endphp
+
+                {{-- SI ES ROL CONTROL → ICONO DE CONFIG --}}
+                @if($user->rol->codigo === 'control')
+                    <button type="button"
+                            class="p-1"
+                            title="Ajustes del sistema"
+                            onclick="window.location.href='{{ route('config') }}'">
+                        <i class="fas fa-sliders-h text-white text-2xl"></i>
+                    </button>
+
+                {{-- SI ES ROL INFORME → SIN ICONO --}}
+                @elseif($user->rol->codigo === 'informe')
+                    {{-- Rol informe no muestra ningún icono en el header --}}
+
+                {{-- CUALQUIER OTRO ROL → ICONO DE PREGUNTA QUE LLEVA AL TUTORIAL --}}
+                @else
+                    <button type="button"
+                            class="p-1"
+                            title="Ver tutorial del sistema"
+                            onclick="window.location.href='{{ route('tablero.tutorial', ['modulo' => $moduloAyuda]) }}'">
+                        <i class="fas fa-question-circle text-white text-2xl"></i>
+                    </button>
+                @endif
             </div>
         </div>
     </div>
@@ -172,7 +146,7 @@
     <div class="info-bar">
         <div class="date-time" id="date-time">Cargando fecha y hora...</div>
         <div class="additional-info font-semibold text-sultana-azul" id="area-info">
-            Bienvenido Al Area de {{ $userArea }}
+            Bienvenido al área de {{ $userArea }}
         </div>
     </div>
 
@@ -184,7 +158,6 @@
         </div>
     </main>
 
-    {{-- SCRIPT PARA HORA EN TIEMPO REAL, LÓGICA DE PERMISOS Y FOTO DE PERFIL --}}
     <script>
         // Datos de los módulos ACTUALIZADOS - CON CARTERA
         const modules = [
@@ -265,76 +238,7 @@
             }
         };
 
-        // ========== FUNCIONALIDAD FOTO DE PERFIL ==========
-        document.getElementById('profilePicContainer').addEventListener('click', function() {
-            document.getElementById('profilePhotoInput').click();
-        });
-
-        document.getElementById('profilePhotoInput').addEventListener('change', function(e) {
-            if (e.target.files && e.target.files[0]) {
-                const file = e.target.files[0];
-
-                if (!file.type.match('image.*')) {
-                    alert('❌ Por favor selecciona una imagen válida');
-                    return;
-                }
-
-                if (file.size > 2 * 1024 * 1024) {
-                    alert('❌ La imagen debe ser menor a 2MB');
-                    return;
-                }
-
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const profileIcon = document.getElementById('profileIcon');
-                    const profileImage = document.getElementById('profileImage');
-
-                    if (profileIcon) profileIcon.style.display = 'none';
-                    if (!profileImage) {
-                        const img = document.createElement('img');
-                        img.id = 'profileImage';
-                        img.src = e.target.result;
-                        img.alt = 'Foto de perfil';
-                        img.className = 'w-full h-full object-cover rounded-[10px]';
-                        document.getElementById('profilePicContainer').appendChild(img);
-                    } else {
-                        profileImage.src = e.target.result;
-                    }
-                };
-                reader.readAsDataURL(file);
-
-                uploadProfilePhoto(file);
-            }
-        });
-
-        function uploadProfilePhoto(file) {
-            const formData = new FormData();
-            formData.append('foto_perfil', file);
-            formData.append('_token', '{{ csrf_token() }}');
-            formData.append('_method', 'PUT');
-
-            fetch('{{ route("profile.update-photo") }}', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert('✅ Foto de perfil actualizada correctamente');
-                } else {
-                    alert('❌ Error al actualizar la foto: ' + data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('❌ Error al subir la imagen');
-            });
-        }
-
-        // ========== NUEVA LÓGICA DE PERMISOS ACTUALIZADA ==========
+        // ========= PERMISOS POR ROL =========
         function isModuleActive(moduleCodigo) {
             const userRolCodigo = userData.rol.codigo;
 
@@ -417,7 +321,6 @@
                 const moduleCard = document.createElement('div');
                 moduleCard.className = `module-card rounded-xl p-5 shadow-lg ${isActive ? 'module-active icon-bounce' : 'module-blocked'}`;
 
-                // Colores corporativos mejorados - AGREGADO COLOR PARA CARTERA
                 const colorClasses = {
                     'operativo': {
                         bg: 'bg-[#0A35FF]',
@@ -483,12 +386,22 @@
             });
         }
 
+        // Aquí definimos el flujo según el rol
         function accessModule(moduleId, hasAccess, moduleTitle) {
             if (!hasAccess) {
                 alert('❌ No tienes permisos para acceder al módulo: ' + moduleTitle);
                 return;
             }
-            window.location.href = `/tablero/${moduleId}`;
+
+            const userRolCodigo = "{{ $userRol }}";
+
+            if (userRolCodigo === 'control') {
+                // CONTROL va directo al tablero Power BI
+                window.location.href = `/tablero/${moduleId}`;
+            } else {
+                // Cualquier otro rol (incluido INFORME) va primero a la vista TUTORIAL
+                window.location.href = `/tablero/${moduleId}/tutorial`;
+            }
         }
 
         // Inicializar
